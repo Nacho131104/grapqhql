@@ -9,6 +9,7 @@ export const resolvers ={
     Query:{
         getCities:async(_:unknown,__:unknown,ctx:argsgetcities):Promise<cityModel[]|null> =>{
             const cities = await ctx.context.find().toArray();
+            console.log(cities)
             return cities;
         }
     }

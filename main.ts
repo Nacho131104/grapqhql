@@ -28,8 +28,8 @@ const server = new ApolloServer({
 });
 
 const { url } = await startStandaloneServer(server, {
-  context:async () => ({contact_Collection}),
-  listen: { port: 9000 },
+  context:async () => ({contact_Collection}
+  ), listen: {port:9000}
 });
 
 

@@ -1,3 +1,4 @@
+/*
 import{OptionalId}from"mongodb"
 
 
@@ -10,4 +11,4 @@ export type cityModel=OptionalId<{
     timezone: string,
 }>
 
-
+*/

@@ -30,53 +30,74 @@ export const resolvers ={
         },
     
     },
-    Mutation:{
-        addCity:async(_:unknown,args:argsAddCity,ctx:argsgetcities):Promise<cityModel> =>{
-            const{name,pais} = args;
+    Mutation: {
+        addCity: async (_: unknown, args: argsAddCity, ctx: argsgetcities): Promise<cityModel> => {
+            const { name, pais } = args;
             const API_KEY = Deno.env.get("API_KEY");
-            if(!API_KEY)throw new GraphQLError("Se neecesita de una api key para acceder a los datos");
-            
+    
+            if (!API_KEY) throw new GraphQLError("Se necesita una API key para acceder a los datos");
+    
+            // Llamada a la API de ciudades
             const url = `https://api.api-ninjas.com/v1/city?name=${name}`;
-            const data = await fetch(url,{
-                headers:{
-                    "X-API-KEY":API_KEY,
-                }
-            })
-            if(data.status !==200)throw new GraphQLError("Error en la api ninja");
-            const response:APIcity[] = await data.json();
-
-            const latitude = response[0].latitude;
-            const longitude = response[0].longitude;
-            const population = response[0].population;
-
+            const data = await fetch(url, {
+                headers: {
+                    "X-API-KEY": API_KEY,
+                },
+            });
+    
+            if (data.status !== 200) throw new GraphQLError("Error en la API Ninja (ciudad)");
+    
+            const response: APIcity[] = await data.json();
+    
+            // Verificar si hay datos en la respuesta
+            if (!response || response.length === 0) {
+                throw new GraphQLError(`No se encontraron datos para la ciudad: ${name}`);
+            }
+    
+            const cityData = response[0];
+    
+            if (!cityData.latitude || !cityData.longitude || !cityData.population) {
+                throw new GraphQLError("Los datos de la ciudad están incompletos en la API");
+            }
+    
+            // Llamada a la API de zonas horarias
             const url2 = `https://api.api-ninjas.com/v1/timezone?city=${name}`;
-            const data2 = await fetch(url2,{
-                headers:{
-                    "X-API-KEY":API_KEY,
-                }
-            })
-            if(data2.status !==200)throw new GraphQLError("Error en la api ninja");
+            const data2 = await fetch(url2, {
+                headers: {
+                    "X-API-KEY": API_KEY,
+                },
+            });
+    
+            if (data2.status !== 200) throw new GraphQLError("Error en la API Ninja (zona horaria)");
+    
             const response2: Apitimezone = await data2.json();
-            const timezone = response2.timezone;
-            const {insertedId} = await ctx.contact_Collection.insertOne({
+    
+            if (!response2.timezone) {
+                throw new GraphQLError("No se encontró la zona horaria para esta ciudad");
+            }
+    
+            const { insertedId } = await ctx.contact_Collection.insertOne({
                 name,
-                country:pais,
-                latitude,
-                longitude,
-                population,
-                timezone
-            })
+                country: pais,
+                latitude: cityData.latitude,
+                longitude: cityData.longitude,
+                population: cityData.population,
+                timezone: response2.timezone,
+            });
+    
             return {
                 _id: insertedId,
                 name,
-                country:pais,
-                latitude,
-                longitude,
-                population,
-                timezone,
-            }
+                country: pais,
+                latitude: cityData.latitude,
+                longitude: cityData.longitude,
+                population: cityData.population,
+                timezone: response2.timezone,
+            };
         }
     }
+    
+}
 
     /*
     Ciudad:{
@@ -89,4 +110,3 @@ export const resolvers ={
 
     }
         */
-}

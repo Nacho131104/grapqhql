@@ -32,13 +32,13 @@ export const resolvers ={
     },
     Mutation: {
         addCity: async (_: unknown, args: argsAddCity, ctx: argsgetcities): Promise<cityModel> => {
-            const { name, pais } = args;
+            
             const API_KEY = Deno.env.get("API_KEY");
     
             if (!API_KEY) throw new GraphQLError("Se necesita una API key para acceder a los datos");
     
             // Llamada a la API de ciudades
-            const url = `https://api.api-ninjas.com/v1/city?name=${name}`;
+            const url = `https://api.api-ninjas.com/v1/city?name=${args.name}`;
             const data = await fetch(url, {
                 headers: {
                     "X-API-KEY": API_KEY,
@@ -51,7 +51,7 @@ export const resolvers ={
     
             // Verificar si hay datos en la respuesta
             if (!response || response.length === 0) {
-                throw new GraphQLError(`No se encontraron datos para la ciudad: ${name}`);
+                throw new GraphQLError(`No se encontraron datos para la ciudad: ${args.name}`);
             }
     
             const cityData = response[0];
@@ -77,8 +77,8 @@ export const resolvers ={
             }
     
             const { insertedId } = await ctx.contact_Collection.insertOne({
-                name,
-                country: pais,
+                name:args.name,
+                country: args.pais,
                 latitude: cityData.latitude,
                 longitude: cityData.longitude,
                 population: cityData.population,
@@ -87,8 +87,8 @@ export const resolvers ={
     
             return {
                 _id: insertedId,
-                name,
-                country: pais,
+                name: args.name,
+                country: args.pais,
                 latitude: cityData.latitude,
                 longitude: cityData.longitude,
                 population: cityData.population,

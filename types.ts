@@ -3,8 +3,8 @@ import{OptionalId}from"mongodb"
 
 
 export type cityModel=OptionalId<{
-    nombre: string,
-    pais: string,
+    name: string,
+    country: string,
     population: number,
     latitude: number,
     longitude: number,

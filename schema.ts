@@ -12,5 +12,8 @@ export const schema =`#graphql
         getCity(id:ID!): Ciudad!
         getCities:[Ciudad]!
     }
+    type Mutation{
+        addCity(nombre:String!): Ciudad!
+    }
 
 `

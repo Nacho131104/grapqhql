@@ -11,6 +11,10 @@ type argsgetcities ={
 type argsgetCity={
     id: string,
 }
+
+type argsAddCity={
+    nombre: string,
+}
 export const resolvers ={
     Query:{
         getCities:async(_:unknown,__:unknown,ctx:argsgetcities):Promise<cityModel[]|null> =>{
@@ -22,9 +26,17 @@ export const resolvers ={
             const cityEncontrada = await ctx.contact_Collection.findOne({_id: new ObjectId(args.id)})
             if(!cityEncontrada)throw new GraphQLError("No se ha encontrado dicha ciudad");
             return cityEncontrada;
-        }
+        },
     
     },
+    Mutation:{
+        addCity:async(_:unknown,args:argsAddCity,ctx:argsgetcities):Promise<cityModel> =>{
+            const{nombre} = args;
+            const API_KEY = Deno.env.get("API_KEY");
+            if(!API_KEY)throw new GraphQLError("Se neecesita de una api key para acceder a los datos");
+            
+        }
+    }
 
     /*
     Ciudad:{

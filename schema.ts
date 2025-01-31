@@ -13,7 +13,7 @@ export const schema =`#graphql
         getCities:[Ciudad]!
     }
     type Mutation{
-        addCity(nombre:String!): Ciudad!
+        addCity(nombre:String!,pais: String!): Ciudad!
     }
 
 `

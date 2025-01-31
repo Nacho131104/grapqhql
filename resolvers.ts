@@ -1,6 +1,6 @@
 
 import { Collection } from "mongodb";
-import {cityModel} from "./types.ts";
+import {APIcity, Apitimezone, cityModel} from "./types.ts";
 import { ObjectId } from "mongodb";
 import { GraphQLError } from "graphql";
 
@@ -35,6 +35,37 @@ export const resolvers ={
             const API_KEY = Deno.env.get("API_KEY");
             if(!API_KEY)throw new GraphQLError("Se neecesita de una api key para acceder a los datos");
             
+            const url = `https://api.api-ninjas.com/v1/city?name=${nombre}`;
+            const data = await fetch(url,{
+                headers:{
+                    "X-API-KEY":API_KEY,
+                }
+            })
+            if(data.status !==200)throw new GraphQLError("Error en la api ninja");
+            const response:APIcity[] = await data.json();
+
+            const country = response[0].country;
+            const latitude = response[0].latitude;
+            const longitude = response[0].longitude;
+            const population = response[0].population;
+
+            const url2 = `https://api.api-ninjas.com/v1/timezone?city=${nombre}`;
+            const data2 = await fetch(url2,{
+                headers:{
+                    "X-API-KEY":API_KEY,
+                }
+            })
+            if(data2.status !==200)throw new GraphQLError("Error en la api ninja");
+            const response2: Apitimezone = await data2.json();
+            const timezone = response2.timezone;
+            return {
+                nombre,
+                pais:country,
+                latitude,
+                longitude,
+                population,
+                timezone,
+            }
         }
     }
 

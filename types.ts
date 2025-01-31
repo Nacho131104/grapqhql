@@ -20,3 +20,8 @@ export type APIcity ={
     population: number,
     country: string,
 }
+
+//https://api.api-ninjas.com/v1/timezone
+export type Apitimezone ={
+    timezone: string,
+}

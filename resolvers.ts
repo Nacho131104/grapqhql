@@ -18,13 +18,12 @@ export const resolvers ={
             return cities;
         },
 
-        /*
         getCity:async(_:unknown,args:argsgetCity,ctx:argsgetcities):Promise<cityModel> =>{
-            const city = await ctx.contact_Collection.findOne({_id: new ObjectId(args.id)})
-            if(!city)throw new GraphQLError("No se ha encontrado dicha ciudad");
-            return city;
+            const cityEncontrada = await ctx.contact_Collection.findOne({_id: new ObjectId(args.id)})
+            if(!cityEncontrada)throw new GraphQLError("No se ha encontrado dicha ciudad");
+            return cityEncontrada;
         }
-            */
+    
     },
 
     /*

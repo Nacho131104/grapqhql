@@ -13,7 +13,7 @@ type argsgetCity={
 }
 
 type argsAddCity={
-    name: string,
+    nombre: string,
     pais: string,
 }
 export const resolvers ={
@@ -38,7 +38,7 @@ export const resolvers ={
             if (!API_KEY) throw new GraphQLError("Se necesita una API key para acceder a los datos");
     
             // Llamada a la API de ciudades
-            const url = `https://api.api-ninjas.com/v1/city?name=${args.name}`;
+            const url = `https://api.api-ninjas.com/v1/city?name=${args.nombre}`;
             const data = await fetch(url, {
                 headers: {
                     "X-API-KEY": API_KEY,
@@ -51,7 +51,7 @@ export const resolvers ={
     
             // Verificar si hay datos en la respuesta
             if (!response || response.length === 0) {
-                throw new GraphQLError(`No se encontraron datos para la ciudad: ${args.name}`);
+                throw new GraphQLError(`No se encontraron datos para la ciudad: ${args.nombre}`);
             }
     
             const cityData = response[0];
@@ -77,7 +77,7 @@ export const resolvers ={
             }
     
             const { insertedId } = await ctx.contact_Collection.insertOne({
-                name:args.name,
+                name:args.nombre,
                 country: args.pais,
                 latitude: cityData.latitude,
                 longitude: cityData.longitude,
@@ -87,7 +87,7 @@ export const resolvers ={
     
             return {
                 _id: insertedId,
-                name: args.name,
+                name: args.nombre,
                 country: args.pais,
                 latitude: cityData.latitude,
                 longitude: cityData.longitude,

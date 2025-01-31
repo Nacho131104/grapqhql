@@ -1,7 +1,7 @@
 
 import { Collection } from "mongodb";
 import {cityModel} from "./types.ts";
-import { ObjectId } from "../../../../AppData/Local/deno/npm/registry.npmjs.org/bson/6.10.1/bson.d.ts";
+import { ObjectId } from "mongodb";
 import { GraphQLError } from "graphql";
 
 type argsgetcities ={
